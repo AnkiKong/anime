@@ -36,7 +36,7 @@ jobs:
           export rdir=`dirname $rpath`
           echo $rdir
           mkdir -p $rdir
-          echo -e "$RCLONE_SECRET" > $rpath
+          echo -e '$RCLONE_SECRET' > $rpath
           ls -lh $rpath
           rclone listremotes
       - name: download
