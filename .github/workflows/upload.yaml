@@ -38,7 +38,7 @@ jobs:
           ls -lh $rpath
           rclone listremotes
       - name: download
-        run: aria2c "${{ inputs.link }} --enable-dht false -s 10 --out ${{ inputs.output }}"
+        run: aria2c "${{ inputs.link }} --enable-dht=false --out=${{ inputs.output }}"
       - name: upload
         run: rclone copy ${{ inputs.output }} onedrive:/
       - name: delete
