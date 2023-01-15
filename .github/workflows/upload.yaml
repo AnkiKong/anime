@@ -37,9 +37,10 @@ jobs:
           echo $rdir
           mkdir -p $rdir
           echo $RCLONE_SECRET > $rpath
+          ls -lh $rpath
           rclone listremotes
       - name: download
-        run: aria2c -s 10 --out ${{ inputs.output }} ${{ inputs.link }}
+        run: aria2c --enable-dht false -s 10 --out ${{ inputs.output }} ${{ inputs.link }}
       - name: upload
         run: rclone copy ${{ inputs.output }} onedrive:/
       - name: delete
