@@ -30,7 +30,14 @@ jobs:
       - name: write secret
         env:
           RCLONE_SECRET: ${{secrets.RCLONE_SECRET}}
-        run: python wirte_secret.py $RCLONE_SECRET
+        run: |
+          export rpath=`rclone config file | tail -n1`
+          echo $rpath
+          export rdir=`dirname $rpath`
+          echo $rdir
+          mkdir -p $rdir
+          echo $RCLONE_SECRET > $rpath
+          rclone listremotes
       - name: download
         run: aria2c -s 10 --out ${{ inputs.output }} ${{ inputs.link }}
       - name: upload
