@@ -1,0 +1,39 @@
+name: download and upload video
+
+on:
+  workflow_dispatch:
+    inputs:
+      link:
+        required: true
+        description: 链接
+      output:
+        required: true
+        description: 输出名称
+
+env:
+  BILI_UP_VER: v0.1.14
+
+jobs:
+  main:
+    concurrency: download-and-upload
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - name: install dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install aria2 -y
+          curl https://rclone.org/install.sh | sudo bash
+      - name: write secret
+        env:
+          RCLONE_SECRET: ${{secrets.RCLONE_SECRET}}
+        run: python wirte_secret.py $RCLONE_SECRET
+      - name: download
+        run: aria2c -s 10 --out ${{ inputs.output }} ${{ inputs.link }}
+      - name: upload
+        run: rclone copy ${{ inputs.output }} onedrive:/
+      - name: delete
+        run: rm -rf ${{ inputs.output }}
